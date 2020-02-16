@@ -1,4 +1,4 @@
-# Parâmetros Estelares
-## Projecto 1 - Astronomia Computacional
+# Stellar parameter determination
+## Project I - Computational Astronomy
 
-Determinação de parâmetros estelares por comparação de espectros de absorção.
+Determination of stellar parameters through spectral comparison, using the equivalent width method. 
