@@ -9,8 +9,6 @@ import os
 import numpy as np
 import scipy.signal as sg
 
-###########scripts###
-
 def observado(data):
     hdulist = pyfits.open(data)
     hdu = hdulist[0]
@@ -116,15 +114,6 @@ def temp(lmb0,loggf,EW,EP,EP_range):
     d=np.absolute(np.mean((np.array([ymin,ymax])*(m2-m1)+m1*b2-b1*m2) / m1 / m2))
     #d=(((ymax-ymin)/2-b2)/m2-((ymax-ymin)/2-b1)/m1)
     T=np.absolute(5040*(np.mean(EP1)-np.mean(EP2))/d)
-    plt.plot(loggfx1,ajuste1,'-',label="linear fit 1")
-    plt.plot(loggfx1,y1 ,'.',label="multiplet 1")
-    plt.plot(loggfx2,ajuste2,'-', label="linear fit 2")
-    plt.plot(loggfx2,y2,'.',label="multiplet 2")
-    plt.ylabel("$log(W_\lambda / \lambda)$",fontsize=15)
-    plt.xlabel("$log(gf \lambda)$",fontsize=15)
-    plt.ylim(-2.5,-1.7)
-    plt.legend(fontsize=13)
-    plt.show()
     return T
 
 def get_temp(stardata,lmb0,loggf,EP,EP_range,delta=.2):
@@ -135,7 +124,6 @@ def get_temp(stardata,lmb0,loggf,EP,EP_range,delta=.2):
     T=temp(lmb0,loggf,EWQ_star,EP,EP_range)
     return T
  
-
 def limdata_star(lmb0,EP,loggf,starwave):
     lmb0_new = lmb0[(lmb0 >= starwave[0]) & (lmb0 <= starwave[-1])]
     EP_new = EP[(lmb0 >= starwave[0]) & (lmb0 <= starwave[-1])]
@@ -172,79 +160,3 @@ def vsinI(obs_data, wls, k = .2):
         vs[i], minima[i, :] = get_fft_min(line, wl)
     minima = np.sum(minima, axis= 0) / wls.size
     return np.mean(vs), minima
-
-######tests######
-
-col_names = ["lambda", "EP", "loggf", "Ei","EW"]
-data=pd.read_csv("line_list_tsantaki.dat", names=col_names,sep="\t")
-data=data[:120]
-lmb0,loggf,EP,EW_sol=np.array(data['lambda'],dtype=float),np.array(data['loggf']),np.array(data['EP']),np.array(data['EW'])
-star1_data="estrela1.fits"
-star2_data="estrela2_vcor.fits"
-datalmb_sint="GES_UVESRed580_Lambda.fits"
-
-star1wave,star1flux=observado(star1_data)
-star2wave,star2flux=observado(star2_data)
-
-
-lmb0_s1,EP_s1,loggf_s1=limdata_star(lmb0,EP,loggf,star1wave)
-lmb0_s2,EP_s2,loggf_s2=limdata_star(lmb0,EP,loggf,star2wave)
-
-EP_range1=([[2.1,2.3],[4.2,4.3]])
-EP_range2=([[2.1,2.3],[4.6,4.7]])
-
-EQW_sol=np.concatenate((((np.array([lmb0])).T,(np.array([EW_sol])).T)),axis=1)
-
-#T_sol=temp(lmb0,loggf,EQW_sol,EP,EP_range1)
-#print("T sol =",T_sol,"K")
-
-#T_star1=get_temp(star1_data,lmb0_s1,loggf_s1,EP_s1,EP_range2,.19)
-#print("T star 1 =", T_star1, "K")
-T_star2= get_temp(star2_data,lmb0_s2,loggf_s2,EP_s2,EP_range2,.18)
-print("T star 2 =",T_star2, "K")
-#temp(star2wave,loggf_s2,EW_star2,EP_s2,EP_range)
-
-e1_lmb,e1_flux=observado(star1_data)
-e2_lmb,e2_flux=observado(star2_data)
-EW_star1,ind1=EW_list(e1_lmb,e1_flux,lmb0_s1,.18)
-EW_star2,ind2=EW_list(e2_lmb,e2_flux,lmb0_s2,.18)
-
-
-
-sint_file="p6000_g+5.0_m0.0_t01_z+0.25_a+0.00.GES4750.fits" #estrela1
-
-sint2_file="p5750_g+5.0_m0.0_t01_z+0.25_a+0.00.GES4750.fits" #estrela2
-
-#multipletos -- mudar oara 
-#m1,b1,loggx1,EP1,y1=ajuste_mtp(lmb0_s2,loggf_s2,EW_star2,EP_s2, EP_rang#e1[0])
-#m2,b2,loggx2,EP2,y2=ajuste_mtp(lmb0_s2,loggf_s2,EW_star2,EP_s2,EP_range1[1])
-#ajuste1, ajuste2= m1*loggx1+b1, m2*loggx2+b2
-#
-#plt.plot(loggx1,ajuste1,'-',label="linear fit 1")
-#plt.plot(loggx1,y1 ,'.',label="multiplet 1")
-#plt.plot(loggx2,ajuste2,'-', label="linear fit 2")
-#plt.plot(loggx2,y2,'.',label="multiplet 2")
-#plt.ylabel("$log(W_\lambda / \lambda)$",fontsize=15)
-#plt.xlabel("$log(gf \lambda)$",fontsize=15)
-#plt.ylim(-2.7,-1.7)
-#plt.legend(fontsize=13)
-#plt.show()
-
-
-
-#for i in range(100 ,120):
-#   eqw1, y_1, cutwave1, cutflux1=eq_width_test(e1_lmb,e1_flux,lmb0_s1[i],.22)
-#   dx=cutwave1[1]-cutwave1[0]
-#   tflux,twave=sp.fftpack.fft(cutflux1-1,),sp.fftpack.fftfreq(cutflux1.size,d=dx)
-#   plt.plot(twave,abs(tflux),'.')
-#   plt.xlim(-10,10)
-#plt.show()
-
-
-#eqw1, y_1, cutwave1, cutflux1=eq_width_test(e1_lmb,e1_flux,lmb0_s1[100],.25)
-#dx=cutwave1[1]-cutwave1[0]
-#tflux,twave=sp.fftpack.fft(cutflux1-1,),sp.fftpack.fftfreq(cutflux1.size,d=dx)
-#plt.plot(twave,abs(tflux))
-##plt.xlim(-2,2)
-##plt.plot()
-#plt.show()
