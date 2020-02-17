@@ -10,22 +10,6 @@ import os
 import numpy as np
 import scripts as pjt
 import scipy.signal as sg
-datab_directory='/home/bolacha/University/Astronomia Computacional/Projeto_1/GES_UVESRed580_deltaAlphaFe+0.0_fits/'
-
-database=os.listdir(datab_directory)
-
-star1_data="estrela1.fits" #T=5807
-star2_data="estrela2_vcor.fits"
-datalmb_sint="GES_UVESRed580_Lambda.fits"
-
-col_names = ["lambda", "EP", "loggf", "Ei","EW"]
-data=pd.read_csv("line_list_tsantaki.dat", names=col_names,sep="\t")
-data=data[:120]
-lmb0,loggf,EP,EW=np.array(data['lambda'],dtype=float),np.array(data['loggf']),np.array(data['EP']),np.array(data['EW'])
-
-file_example="/home/bolacha/University/Astronomia Computacional/Projeto_1/GES_UVESRed580_deltaAlphaFe+0.0_fits/p5500_g+5.0_m0.0_t01_z-0.75_a+0.30.GES4750.fits"
-
-#############
 
 def observado(data):
     hdulist = pyfits.open(data)
@@ -159,33 +143,3 @@ def plot(EW_star,data_star,datalmb_sint,lmb0,delta):
     plt.ylabel("EW - observed", fontsize=15)
     plt.legend(fontsize=13)
     plt.show()
-
-
-#####some tests
-
-e1_lmb,e1_flux=observado(star1_data)
-lmb0_s1,EP_s1,loggf_s1=limdata_star(lmb0,EP,loggf,e1_lmb)
-EW_star1,ind1=EW_list(e1_lmb,e1_flux,lmb0_s1,.2)
-
-sint_file1="p6000_g+5.0_m0.0_t01_z+0.25_a+0.00.GES4750.fits" #estrela1
-
-sint_file2="p5750_g+5.0_m0.0_t01_z+0.25_a+0.00.GES4750.fits" #estrela2
-
-
-
-
-plot(EW_star1,sint_file1,datalmb_sint,lmb0_s1,.18)
-
-#print(sint_approx(EW_star1,data_star1,datalmb_sint,lmb0_s1,.18))
-
-##Estrela 1: T_est1: 5995; dif min: 0.002723338737338876 /// file index  117  /// T estimated = 6000  /// logg estimated = +5.0 /// [Fe/H] = -0.25 /// Indice químico = +0.10.
-             ## file: p6000_g+5.0_m0.0_t01_z-0.25_a+0.10.GES4750.fits p6000_g+5.0_m0.0_t01_z-0.25_a+0.10.ges4750.fits
-
-
-#Estrela 2: file:  5750p; dif min: 0.0045958793456678 /// file inde 575EW_star2,ind2=EW_list(e2_lmb,e2_flux,lmb0_s2,.2)
-
-#print(sint_approx(EW_star2,data_star2,datalmb_sint,lmb0_s2,.18))
-
-
-
-
