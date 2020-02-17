@@ -9,12 +9,6 @@ import scipy.optimize as spo
 import pandas as pd
 import os 
 
-data_directory='/home/bolacha/University/Astronomia Computacional/Projeto_1/GES_UVESRed580_deltaAlphaFe+0.0_fits/'
-database=os.listdir(data_directory)
-star1_data="estrela1.fits"
-star2_data="estrela2_vcor.fits"
-
-#########
 
 def cut_database(T_star,logg_0=3.5):
     data_list=np.array([])
