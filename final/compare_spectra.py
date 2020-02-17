@@ -78,24 +78,3 @@ def espectrocenas(obs, wave_sim, flux_sim, xmin, xmax, R=60000):
     sinterp = interp(cutwave_obs, cutwave_sim, flux_sint)
     return(cutwave_obs, sinterp, cutflux_obs)
 
-
-##some tests
-
-
-data_star=np.array(cut_database(5309))
-
-sint_dir="GES_UVESRed580_deltaAlphaFe+0.0_fits/"
-sint_file="p6000_g+5.0_m0.0_t01_z-0.25_a+0.10.GES4750.fits" #star 1
-#sint_file1="p5250_g+5.0_m0.0_t01_z+0.25_a+0.00.GES4750.fits" "star2"
-
-T_est, logg_est, feH_est, indq = sint_file[1:5], sint_file[7:11], sint_file[22:27], sint_file[29:35]
-
-cutwave_obs,sinterp,cutflux_obs=espectrocenas(star2_data,"GES_UVESRed580_Lambda.fits",sint_dir+sint_file,5700,5730)
-
-plt.plot(cutwave_obs, sinterp,label=r"T = {}, log(g) = {}, [FE/H] = {}, $\alpha = {}$".format(T_est, logg_est, feH_est, indq))
-plt.plot(cutwave_obs, cutflux_obs-.38,label=r"Observed data")
-plt.xlabel(r"$\lambda [\AA]$",fontsize=15)
-plt.ylabel("Flux, normalized", fontsize=15)
-plt.legend(fontsize=10)
-plt.show()
-
